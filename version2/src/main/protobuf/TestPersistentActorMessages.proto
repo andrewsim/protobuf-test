@@ -1,0 +1,68 @@
+syntax = "proto2";
+
+import "scalapb/scalapb.proto";
+import "CommonTypes.proto";
+
+package protobuftest.proto.actor;
+
+message Embedded {
+  required BigDecimal bigDecimal = 105; // required
+  optional Embedded next = 106;
+}
+
+message TestMessage {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  required string a = 1;
+  optional string b = 2;
+  optional string c = 3;
+}
+
+message MessageA {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+}
+
+enum SimSize {
+  Standard = 1;
+  Micro = 2;
+  Nano = 3;
+}
+
+message MessageB {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  required sint32 int1 = 101;
+  required sint64 long2 = 102; // long2
+  required UUID uuid1 = 103;
+  required string string1 = 104;
+}
+
+message MessageC {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  //reserved 107; // field deleted
+  required Embedded embedded = 108;
+}
+
+message Item { // new message
+  required UUID id = 109;
+  required Embedded field1 = 110;
+  optional sint32 field2 = 111;
+  optional string field3 = 112;
+}
+
+message SomeMapItem { // new message
+  required UUID id = 113;
+  required Item item = 114;
+}
+
+message SomeMap { // new message
+  repeated SomeMapItem items = 115;
+}
+
+message MessageD { // new message
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  required UUID id = 115;
+  required SomeMap map = 116;
+}

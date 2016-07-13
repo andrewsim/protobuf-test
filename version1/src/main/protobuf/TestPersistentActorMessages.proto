@@ -1,0 +1,38 @@
+syntax = "proto2";
+
+import "scalapb/scalapb.proto";
+import "CommonTypes.proto";
+
+package protobuftest.proto.actor;
+
+message Embedded {
+  optional BigDecimal bigDecimal = 105;
+  optional Embedded next = 106;
+}
+
+message TestMessage {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  required string a = 1;
+  optional string b = 2;
+}
+
+message MessageA {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+}
+
+message MessageB {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  required sint32 int1 = 101;
+  required sint64 long1 = 102;
+  required UUID uuid1 = 103;
+  required string string1 = 104;
+}
+
+message MessageC {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  required OffsetDateTime time = 107;
+  required Embedded embedded = 108;
+}

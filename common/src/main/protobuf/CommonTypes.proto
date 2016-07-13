@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package protobuftest.proto;
+
+message UUID {
+  required fixed64 low = 1;
+  required fixed64 high = 2;
+}
+
+message OffsetDateTime {
+  required string iso8601extended = 3;
+}
+
+message BigDecimal {
+  required string textual = 4;
+}

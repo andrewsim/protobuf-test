@@ -1,0 +1,27 @@
+
+# Sbt
+
+target/
+project/project/*
+project/target/*
+
+# Git 
+**/*.orig
+
+# IntelliJ Idea
+
+.idea/
+
+# Mac OS
+.DS_Store
+
+# Binaries 
+*.class
+*.pyc
+
+# AWS S3
+**/aws_credentials
+
+# Snapshots
+source/core/snapshots/
+source/snapshots/*
