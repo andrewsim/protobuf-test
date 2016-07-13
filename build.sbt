@@ -43,7 +43,7 @@ lazy val root = project.in(file("."))
           testResults.summaries ++ multiNodeResults.summaries)
     }
   )
-  .settings(jvmOptions in MultiJvm := Seq("-Dmultinode.server-host=192.168.11.111", "-Dmultinode.host=192.168.11.111", "-DmultiNodeHosts=192.168.11.111"))
+  .settings(multiNodeHosts in MultiJvm := Seq("root@139.59.163.87", "root@139.59.168.181"))
   .configs (MultiJvm)
   .dependsOn(common, version1, version2)
   .aggregate(common, version1, version2)

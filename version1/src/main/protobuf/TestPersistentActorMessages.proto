@@ -36,3 +36,19 @@ message MessageC {
   required OffsetDateTime time = 107;
   required Embedded embedded = 108;
 }
+
+message MessageTest {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  oneof value {
+    MessageA msgA = 1;
+    MessageB msgB = 2;
+    MessageA msgA2 = 3;
+  }
+}
+
+message WrapX {
+  option (scalapb.message).extends = "protobuftest.actor.TestPersistentActor.Command";
+
+  required MessageTest msg = 1;
+}

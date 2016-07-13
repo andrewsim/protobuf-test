@@ -11,6 +11,12 @@ object ProtobufMultiNodeConfig extends MultiNodeConfig {
   commonConfig(ConfigFactory.parseString(
     s"""
        |akka {
+       |  debug {
+       |    unhandled = on
+       |    lifecycle = on
+       |    log-sent-messages = on
+       |    log-received-messages = on
+       |  }
        |  remote {
        |    log-sent-messages = on
        |    log-received-messages = on

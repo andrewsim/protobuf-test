@@ -7,7 +7,7 @@ import akka.actor.Props
 import akka.remote.testkit.MultiNodeSpec
 import akka.testkit.ImplicitSender
 import protobuftest.actor.TestPersistentActor
-import protobuftest.proto.actor.TestPersistentActorMessages.{MessageB, TestMessage}
+import protobuftest.proto.actor.TestPersistentActorMessages._
 import protobuftest.extensions.commontypes._
 import scala.concurrent.duration._
 
@@ -27,11 +27,23 @@ class ProtobufMultiNodeSpec extends MultiNodeSpec(ProtobufMultiNodeConfig)
     }
 
     "send to and receive from a remote node" in {
-      val message = MessageB(111, 222, UUID.randomUUID(), "string")
       runOn(node1) {
         enterBarrier("deployed")
+        val messageA = MessageA()
+        val messageA2 = MessageA()
+        val messageB = MessageB(111, 222, UUID.randomUUID(), "string")
+        val messageTest = MessageTest().withMsgA2(messageA2)
+        val messageTest2 = MessageTest().withMsgB(messageB)
+        val messageWrapX = WrapX(messageTest)
+        val messageWrapX2 = WrapX(messageTest2)
         val remoteActor = system.actorSelection(node(node2) / "user" / "test-persistent-actor")
-        remoteActor ! message
+//        remoteActor ! messageTest
+//        expectMsg(3 seconds, 111)
+//        remoteActor ! messageTest2
+//        expectMsg(3 seconds, 111)
+        remoteActor ! messageWrapX
+        expectMsg(3 seconds, 111)
+        remoteActor ! messageWrapX2
         expectMsg(3 seconds, 111)
       }
 
