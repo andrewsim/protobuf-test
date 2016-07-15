@@ -52,3 +52,108 @@ message WrapX {
 
   required MessageTest msg = 1;
 }
+
+
+
+
+
+message MyFSMStates {
+
+  message StateA {
+    option (scalapb.message).extends = "protobuftest.actor.MyFSMActor.MyStateA";
+  }
+
+ // message StateB {
+ //   option (scalapb.message).extends = "protobuftest.actor.MyFSMActor.MyStateB";
+ // }
+
+ // message StateC {
+ //   option (scalapb.message).extends = "protobuftest.actor.MyFSMActor.MyStateC";
+ // }
+
+  oneof value {
+    StateA stateA = 1;
+  //  StateB stateB = 2;
+  //  StateC stateC = 3;
+  }
+}
+
+message OrderPhase {
+
+  enum PhaseA {
+    PhaseAAlpha = 1;
+    PhaseABeta = 2;
+    PhaseAGamma = 3;
+  }
+
+  // enum PhaseB {
+  //   PhaseBAlpha = 1;
+  //   PhaseBBeta = 2;
+  // }
+
+  // enum PhaseC {
+  //   PhaseCAlpha = 1;
+  //   PhaseCBeta = 2;
+  //   PhaseCGamma = 3;
+  //   PhaseCOmega = 4;
+  //   PhaseCTheta = 5;
+  // }
+
+  oneof phase {
+    MyFSMStates.StateA stateA = 1;
+  //  MyFSMStates.StateB stateB = 2;
+  //  MyFSMStates.StateC stateC = 3;
+  }
+  oneof state {
+    PhaseA phaseA = 101;
+  //  PhaseB phaseB = 102;
+  //  PhaseC phaseC = 103;
+  }
+}
+
+message MyStateData {
+
+  required string id = 1;
+  required OrderPhase phase = 2;
+
+}
+
+message MyDomainEvent {
+
+  message ApplyInitialize {
+    required string id = 1;
+  }
+
+  message ApplyOrderPhase {
+    required OrderPhase orderPhase = 1;
+  }
+
+  oneof event {
+    ApplyInitialize applyInitialize = 1;
+    ApplyOrderPhase applyOrderPhase = 2;
+  }
+
+}
+
+
+message MyCommand {
+
+    // message Initialize { }
+
+    message GetMyState {
+        required int32 index = 1;
+    }
+
+    // message SetOrderPhase {
+    //   required OrderPhase orderPhase = 1;
+    // }
+
+    oneof command {
+      // Initialize initialize = 1;
+      // SetOrderPhase setOrderPhase = 2;
+      GetMyState getState = 3;
+    }
+
+}
+
+

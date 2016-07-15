@@ -1,14 +1,12 @@
 package protobuftest
 
 
-import java.util.UUID
-
-import akka.actor.Props
 import akka.remote.testkit.MultiNodeSpec
 import akka.testkit.ImplicitSender
 import protobuftest.actor.TestPersistentActor
+import protobuftest.proto.actor.TestPersistentActorMessages.MyCommand.GetMyState
 import protobuftest.proto.actor.TestPersistentActorMessages._
-import protobuftest.extensions.commontypes._
+
 import scala.concurrent.duration._
 
 class ProtobufMultiJvmNode1 extends ProtobufMultiNodeSpec
@@ -29,27 +27,20 @@ class ProtobufMultiNodeSpec extends MultiNodeSpec(ProtobufMultiNodeConfig)
     "send to and receive from a remote node" in {
       runOn(node1) {
         enterBarrier("deployed")
-        val messageA = MessageA()
-        val messageA2 = MessageA()
-        val messageB = MessageB(111, 222, UUID.randomUUID(), "string")
-        val messageTest = MessageTest().withMsgA2(messageA2)
-        val messageTest2 = MessageTest().withMsgB(messageB)
-        val messageWrapX = WrapX(messageTest)
-        val messageWrapX2 = WrapX(messageTest2)
-        val remoteActor = system.actorSelection(node(node2) / "user" / "test-persistent-actor")
-//        remoteActor ! messageTest
-//        expectMsg(3 seconds, 111)
-//        remoteActor ! messageTest2
-//        expectMsg(3 seconds, 111)
-        remoteActor ! messageWrapX
-        expectMsg(3 seconds, 111)
-        remoteActor ! messageWrapX2
-        expectMsg(3 seconds, 111)
+//        val remoteActor = system.actorSelection(node(node2) / "user" / "test-persistent-actor")
+        val remoteActor2 = system.actorSelection(node(node2) / "user" / "test---persistent")
+        remoteActor2 ! MyCommand().withGetState(GetMyState(1))
+//        expectMsg(3 seconds, MyStateData("", OrderPhase(OrderPhase.Phase.StateA(MyFSMStates.StateA()), OrderPhase.State.PhaseA(PhaseA.PhaseAAlpha))))
+        expectMsg(3 seconds, MyCommand().withGetState(GetMyState(1)))
+        remoteActor2 ! GetMyState(1)
+        expectMsg(3 seconds, GetMyState(1))
       }
 
       runOn(node2) {
-        system.actorOf(TestPersistentActor.props, "test-persistent-actor")
+//        system.actorOf(MyFSMActor.props, "test-persistent-actor")
+        system.actorOf(TestPersistentActor.props, "test---persistent")
         enterBarrier("deployed")
+        Thread.sleep(1000)
       }
 
       enterBarrier("finished")

@@ -15,7 +15,7 @@ trait TestPersistentActorTrait { _: PersistentActor with ActorLogging =>
 
   var messages = List.empty[Message]
 
-  def persistenceId: String = "persistentId"
+  def persistenceId: String = java.util.UUID.randomUUID().toString
 
   def receiveRecover: Receive = {
     case RecoveryCompleted =>
@@ -41,6 +41,10 @@ trait TestPersistentActorTrait { _: PersistentActor with ActorLogging =>
         messages = message :: messages
         sender() ! 111
       }
+
+    case a =>
+      println(s"+++++++++++++++MESSAGE: $a++++++++++++++++++++++")
+      sender() ! a
 
     case 111 =>
       // do nothing
